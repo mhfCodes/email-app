@@ -6,49 +6,40 @@ public class Email {
 	private String department;
 	private String email;
 	private String password;
-	private static Character[] passTemplate = {
-			'A','B','C','D','E','F','G','H','I','J',
-			'K','L','M','N','O','P','Q','R','S','T',
-			'U','V','W','X','Y','Z','a','b','c','d',
-			'e','f','g','h','i','j','k','l','m','n',
-			'o','p','q','r','s','t','u','v','w','x',
-			'y','z','!','@','#','$','%','^','&','*',
-			'(',')','-','_','=','+','1','2','3','4',
-			'5','6','7','8','9'
-			};
+	private int defaultPasswordLength = 8;
 	
-	Email() {
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please Enter Your First Name: ");
-		this.firstName = scanner.next();
-		System.out.println("Please Enter Your Last Name: ");
-		this.lastName = scanner.next();
+	Email(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		System.out.println("Please Enter Your Department: ");
-		this.department = scanner.next();
+		this.department = this.setDepartment();
 		this.email = this.genEmail();
-		this.password = this.genPassword();
+		this.password = this.genPassword(defaultPasswordLength);
 	}
 	
-	public String genEmail() {
+	private String setDepartment() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please Enter Your Department Number:\n(1 = sales, 2 = development, 3 = accounting)\n");
+		int choice = scanner.nextInt();
+		if (choice == 1) { return "sales"; }
+		else if (choice == 2) { return "development"; }
+		else if (choice == 3) { return "accouting"; }
+		else { return ""; }
+	}
+	
+	private String genEmail() {
 		return this.firstName + "." + this.lastName + "@" + this.department + ".company.com";
 	}
 	
-	public String genPassword() {
-		String password = "";
+	private String genPassword(int length) {
+		String passwordTemplate = "ABCDEFGHIJKLMNOPRQSTUVWXYZ123456789!@#$%^";
+		char[] password = new char[length];
 		int rand;
-		for (int i = 0; i < 12; i++) {
-			rand = (int) Math.floor(Math.random() * passTemplate.length);
-			password += passTemplate[rand];
+		for (int i = 0; i < length; i++) {
+			rand = (int) (Math.random() * passwordTemplate.length());
+			password[i] = passwordTemplate.charAt(rand);
 		}
-		return password;
-	}
-	
-	public String getFirstName() {
-		return this.firstName;
-	}
-	
-	public String getLastName() {
-		return this.lastName;
+		return new String(password);
 	}
 	
 	public String getDepartment() {
@@ -69,6 +60,11 @@ public class Email {
 	
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String showInfo() {
+		return "Name: " + this.firstName + " " + this.lastName + "\n" +
+				"Email: " + this.email + "\n" + "Department: " + this.department;
 	}
 
 }
